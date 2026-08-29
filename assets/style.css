@@ -248,6 +248,7 @@ a {
 
 .prose {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   max-width: 60ch;
   font-size: var(--fs-500);
@@ -525,6 +526,7 @@ a {
 --------------------------------------------------------------------- */
 
 .chart {
+  min-width: 0;
   margin-block: var(--space-6);
   border: var(--border);
   background: var(--card);
@@ -534,6 +536,7 @@ a {
 .chart img {
   display: block;
   width: 100%;
+  max-width: 100%;
   height: auto;
   background: var(--paper);
 }
