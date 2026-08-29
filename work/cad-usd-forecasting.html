@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forecasting CAD/USD on macro fundamentals · Ryan Lai</title>
+<meta name="description" content="A macro regression on CAD/USD looked respectable in sample. The out-of-sample backtest showed it was worse than a coin flip.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2314554e'/%3E%3Ctext%20x='32'%20y='44'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='34'%20font-weight='700'%20fill='%23e7eaec'%20text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="dive-header">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">&larr; Back to portfolio</a>
+    <h1 class="dive-header__title">A macro model that fit the history and failed the backtest</h1>
+    <dl class="data-strip">
+      <div>
+        <dt>Course</dt>
+        <dd>FINS3616 International Business Finance, UNSW, T1 2026</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>Excel, FactSet</dd>
+      </div>
+      <div>
+        <dt>Result</dt>
+        <dd class="figure">90/100 (HD)</dd>
+      </div>
+    </dl>
+  </div>
+</header>
+
+<main id="main" class="dive-main">
+
+  <section class="section" aria-labelledby="the-question-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">01 / 06</p>
+        <h2 id="the-question-heading">The question</h2>
+      </div>
+      <div class="prose">
+        <p>
+          Standard theory says exchange rates should track macro fundamentals. Purchasing
+          Power Parity says the lower-inflation currency appreciates. The International
+          Fisher Effect says the same thing through interest rates. Both are taught as if
+          they work.
+        </p>
+        <p>
+          I tested whether they actually forecast CAD/USD, using quarterly data from 2001Q2
+          to 2024Q3 from FactSet. The question I cared about was not whether the regression
+          fits, but whether the fitted model would have been any use to someone deciding
+          whether to hedge.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="data-and-method-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">02 / 06</p>
+        <h2 id="data-and-method-heading">Data and method</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The dependent variable is the forward-looking change in CAD/USD, quoted as home
+          over foreign, so a rise means the Canadian dollar weakens. Over 94 quarters it has
+          a mean of 0.030% and a standard deviation of 4.235%, meaning a currency that went
+          essentially nowhere while swinging about 4% a quarter.
+        </p>
+        <p>
+          The two economies are close to identical on the inputs. Average GDP growth 2.00%
+          in Canada against 2.15% in the US. Average inflation 2.20% against 2.54%. Average
+          long-term rates 2.97% against 3.14%. Every gap is under 35 basis points, which
+          already sets a low ceiling on how much these variables can explain.
+        </p>
+        <p>
+          I regressed the FX change on Canadian GDP growth, US GDP growth, the inflation
+          differential and the interest rate differential, at three horizons: one quarter,
+          one year and three years.
+        </p>
+        <p>
+          The honest first observation is that theory already looked wrong on the raw data.
+          Canada's inflation ran below the US, so PPP predicts the CAD appreciates. It
+          depreciated by 2.9% over the sample.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="results-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">03 / 06</p>
+        <h2 id="results-heading">Results</h2>
+      </div>
+      <div class="prose">
+        <figure class="chart">
+          <img src="../assets/charts/cadusd-r2.svg" alt="Bar chart of adjusted R-squared for the CAD/USD regression at three forecast horizons: 0.035 at one quarter, 0.110 at one year, and 0.116 at three years, showing explanatory power stays low even at the longest horizon.">
+          <figcaption><strong>Chart 1.</strong> Adjusted R&sup2; by forecast horizon.</figcaption>
+        </figure>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">1 quarter</th>
+              <th scope="col">1 year</th>
+              <th scope="col">3 years</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Interest rate differential</th>
+              <td class="figure">&minus;1.33 (p 0.20)</td>
+              <td class="figure">&minus;4.29 (p 0.04)</td>
+              <td class="figure">&minus;10.84 (p 0.004)</td>
+            </tr>
+            <tr>
+              <th scope="row">Adjusted R&sup2;</th>
+              <td class="figure">0.035</td>
+              <td class="figure">0.110</td>
+              <td class="figure">0.116</td>
+            </tr>
+            <tr>
+              <th scope="row">F p-value</th>
+              <td class="figure">0.129</td>
+              <td class="figure">0.008</td>
+              <td class="figure">0.009</td>
+            </tr>
+            <tr>
+              <th scope="row">N</th>
+              <td class="figure">94</td>
+              <td class="figure">91</td>
+              <td class="figure">83</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          At one quarter nothing is significant, individually or jointly, and the model
+          explains almost none of the variation. Macro fundamentals say nothing about where
+          the currency goes next quarter.
+        </p>
+        <p>
+          Stretch the horizon and the interest rate differential becomes significant and its
+          coefficient grows fourfold and then eightfold. This is consistent with PPP as a
+          long-run theory, and with Rogoff's finding that it takes three to five years to
+          bite. GDP growth never mattered at any horizon. Inflation carried the right sign
+          throughout but never reached significance.
+        </p>
+        <p>
+          The sign on the interest rate differential also contradicts the International
+          Fisher Effect, which predicts the high-rate currency depreciates. It appreciated
+          instead, which is the forward premium puzzle and the reason carry trades exist.
+        </p>
+        <p>
+          Even at its best, the three-year model leaves about 88% of the variation
+          unexplained.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="the-backtest-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">04 / 06</p>
+        <h2 id="the-backtest-heading">The backtest, which is the real result</h2>
+      </div>
+      <div class="prose">
+        <p>
+          An adjusted R&sup2; of 0.11 looks respectable enough to act on, so I tested whether
+          it survives out of sample. I took the one-year model and generated a forecast for
+          each Q4 from 2010 to 2019, then compared it to what happened.
+        </p>
+
+        <figure class="chart">
+          <img src="../assets/charts/cadusd-backtest.svg" alt="Grouped bar chart with forecast and actual CAD/USD change bars side by side for each year from 2010 to 2019, with the two bars diverging sharply in 2014 when an oil price collapse is annotated on the chart.">
+          <figcaption><strong>Chart 2.</strong> Forecast against actual, ten one-year-ahead predictions.</figcaption>
+        </figure>
+
+        <table class="data-table">
+          <tbody>
+            <tr>
+              <th scope="row">Mean absolute error</th>
+              <td class="figure">7.20%</td>
+            </tr>
+            <tr>
+              <th scope="row">RMSE</th>
+              <td class="figure">8.87%</td>
+            </tr>
+            <tr>
+              <th scope="row">Directional accuracy</th>
+              <td class="figure">40%</td>
+            </tr>
+            <tr>
+              <th scope="row">Correlation with actual</th>
+              <td class="figure">&minus;0.30</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          The model called direction correctly four times out of ten. A coin does better.
+          And the correlation between forecast and actual is negative, so the model is not
+          merely uninformative, it is wrong in a consistent direction.
+        </p>
+        <p>
+          The clearest failure is 2014. The model predicted the CAD would strengthen by
+          0.84%. It weakened by 19.93%, because oil collapsed and Canada is one of the
+          largest oil exporters in the world. No combination of GDP, inflation and interest
+          rate differentials contains that information.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-concluded-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">05 / 06</p>
+        <h2 id="what-i-concluded-heading">What I concluded</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The in-sample fit was masking the model's actual predictive power, which is worse
+          than nothing. Any hedging decision taken on these estimates would have destroyed
+          value rather than protected it.
+        </p>
+        <p>
+          Two things went wrong. The model is overfitted, which the adjusted R&sup2; does not
+          reveal and only the backtest does. And it is missing the variables that actually
+          move CAD/USD: commodity prices, risk sentiment and political shocks like the 2025
+          tariff announcements.
+        </p>
+        <p>
+          The conclusion I wrote is that macro forecasts belong as one input alongside
+          others, never as a standalone tool. That is a less satisfying answer than a
+          working model, but it is the one the data supports.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-would-do-differently-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">06 / 06</p>
+        <h2 id="what-i-would-do-differently-heading">What I would do differently</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The obvious fix is adding oil to the specification. WTI or a commodity index would
+          test directly whether the 2014 failure is a missing-variable problem or something
+          worse.
+        </p>
+        <p>
+          I would also fit the model on a rolling window rather than the full sample.
+          Canada's relationship to oil, and to US policy, is not stable across 23 years, and
+          a single set of coefficients assumes it is.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Ryan Lai · Sydney</span>
+    <a href="mailto:hoanganhlomo@gmail.com">hoanganhlomo@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

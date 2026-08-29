@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interstellar Bank credit pipeline · Ryan Lai</title>
+<meta name="description" content="A synthetic loan origination prototype for a fictional bank: application form, document parsing, a GLM credit risk model and an IFRS 9 loss estimate, saving an estimated $112,250 a week.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2314554e'/%3E%3Ctext%20x='32'%20y='44'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='34'%20font-weight='700'%20fill='%23e7eaec'%20text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="dive-header">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">&larr; Back to portfolio</a>
+    <h1 class="dive-header__title">A loan origination prototype, from the application form to an IFRS 9 loss estimate</h1>
+    <dl class="data-strip data-strip--wrap">
+      <div>
+        <dt>Competition</dt>
+        <dd>BISA x UNSW WIT x Capgemini Case Competition, 2025. Finalist.</dd>
+      </div>
+      <div>
+        <dt>Team</dt>
+        <dd>Moovelous Consulting Group, four people.</dd>
+      </div>
+      <div>
+        <dt>My sections</dt>
+        <dd>The credit assessment and processing model, the financial case, and the full front end.</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>Python (statsmodels, pandas), HTML/CSS/JS</dd>
+      </div>
+    </dl>
+  </div>
+</header>
+
+<main id="main" class="dive-main">
+
+  <section class="section" aria-labelledby="the-question-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">01 / 05</p>
+        <h2 id="the-question-heading">The question</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The brief was a fictional bank, Interstellar, that had just acquired a smaller
+          lender and inherited a mess. Loan processing was manual, slow and error-prone,
+          systems crashed under volume, and approvals were inconsistent because nothing was
+          risk-graded.
+        </p>
+        <p>
+          Most teams answer a brief like this with a strategy deck. We built the thing
+          instead, so the recommendation came with a working demonstration of what it would
+          actually look like.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="data-and-method-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">02 / 05</p>
+        <h2 id="data-and-method-heading">Data and method</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The constraint that shaped everything: no real customer data. Under privacy limits
+          we generated a synthetic dataset modelled on first-home-buyer profiles, the bank's
+          largest segment, carrying age, income, employment status, credit score, deposit,
+          property value, loan amount and loan-to-value ratio.
+        </p>
+        <p>
+          That constraint is worth being clear about. Synthetic data proves a pipeline runs
+          end to end. It does not validate the model, because the only pattern available to
+          learn is the one the generator put there. The prototype is a demonstration of
+          architecture, not evidence of predictive accuracy.
+        </p>
+        <p>I built four pieces:</p>
+        <p>
+          <strong>The customer portal.</strong> An application form with document upload and
+          an assistant panel, built mobile-first. This is the entry point, and building it
+          made the data requirements concrete rather than hypothetical.
+        </p>
+        <p>
+          <strong>Document parsing.</strong> An OCR step that pulls income, credit score,
+          deposit and loan details out of uploaded documents and passes them straight into
+          the model, so no one re-keys anything.
+        </p>
+        <p>
+          <strong>The credit risk model.</strong> A generalised linear model with a logit
+          link, fit in statsmodels, estimating probability of default from the structured
+          inputs. The threshold was selected by tuning F1 across the range rather than
+          defaulting to 0.5, since the approve and reject errors are not symmetric in cost.
+        </p>
+        <p>
+          <strong>IFRS 9 outputs.</strong> PD feeds Exposure at Default and Loss Given
+          Default to give Expected Credit Loss, ECL = PD x EAD x LGD. LGD is rule-based and
+          scales with loan-to-value. This is the part that makes the output usable by a bank
+          rather than just a classifier score, because ECL is what provisioning and audit
+          actually run on.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="results-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">03 / 05</p>
+        <h2 id="results-heading">Results</h2>
+      </div>
+      <div class="prose">
+        <figure class="chart">
+          <img src="../assets/charts/interstellar-cost.svg" alt="Bar chart comparing weekly loan processing cost for the manual process at $168,750 against the prototype at $56,500, with a callout showing $112,250 saved a week.">
+          <figcaption><strong>Chart 1.</strong> Before and after weekly processing cost.</figcaption>
+        </figure>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Before</th>
+              <th scope="col">After</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Cost per staff per day</th>
+              <td class="figure">$675</td>
+              <td class="figure">$225</td>
+            </tr>
+            <tr>
+              <th scope="row">Weekly processing cost</th>
+              <td class="figure">$168,750</td>
+              <td class="figure">$56,500</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          The saving is $112,250 a week, on the assumption that automation handles roughly
+          70% of applications and the remaining 30% still go to a person. The model is a
+          straightforward staff-hours calculation, and the assumption is the load-bearing
+          part of it, not the arithmetic.
+        </p>
+        <p>
+          I also built a transition matrix over five PD bands to simulate how borrowers
+          migrate between risk grades over time. A point-in-time PD tells you who might
+          default now. The migration pattern tells you where the book is heading, which is
+          what IFRS 9 staging needs and what gives the bank an early warning rather than a
+          lagging one.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-concluded-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">04 / 05</p>
+        <h2 id="what-i-concluded-heading">What I concluded</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The recommendation was not &ldquo;automate the loan process&rdquo;. It was that
+          the bank should treat credit decisions as a graded, explainable pipeline rather
+          than a manual approval queue, and the prototype existed to show what that means
+          concretely.
+        </p>
+        <p>
+          Building the front end alongside the model changed the analysis. Sitting with the
+          application form forces you to decide exactly which fields the model needs, and
+          that fed back into what the GLM could reasonably use. The two halves are usually
+          built by different people, and doing both meant the data requirements and the
+          model specification agreed with each other.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-would-do-differently-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">05 / 05</p>
+        <h2 id="what-i-would-do-differently-heading">What I would do differently</h2>
+      </div>
+      <div class="prose">
+        <p>
+          The obvious limitation is the synthetic data. Everything downstream inherits it,
+          so the first real step would be refitting on actual lending records and checking
+          whether the coefficients survive.
+        </p>
+        <p>
+          I would also treat the cost model more carefully. It rests on a single assumption
+          about the automation rate, and a range with the saving recalculated at each point
+          would be more honest than one number.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Ryan Lai · Sydney</span>
+    <a href="mailto:hoanganhlomo@gmail.com">hoanganhlomo@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
