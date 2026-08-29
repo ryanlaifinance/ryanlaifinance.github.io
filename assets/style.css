@@ -1,0 +1,780 @@
+/*
+  Portfolio stylesheet — single source of truth for index.html and the
+  work/ deep dive pages. Tokens and shared components live here; nothing
+  in this file is tuned to a single page.
+*/
+
+/* ---------------------------------------------------------------------
+   Reset
+--------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body,
+h1, h2, h3, h4,
+p, dl, dd, figure {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------------
+   Tokens
+--------------------------------------------------------------------- */
+
+:root {
+  /* colour */
+  --paper: #E7EAEC;
+  --card: #F4F6F7;
+  --ink: #0E1A22;
+  --muted: #56676F;
+  --rule: #C6CFD4;
+  --frontier: #14554E;
+  --signal: #C9942A;
+  --grid-line: rgba(14, 26, 34, 0.06);
+
+  /* type */
+  --font-display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --fs-900: clamp(2.75rem, 2.1rem + 3vw, 4.75rem);
+  --fs-800: clamp(1.9rem, 1.6rem + 1.4vw, 2.75rem);
+  --fs-700: clamp(1.4rem, 1.25rem + 0.7vw, 1.75rem);
+  --fs-600: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+  --fs-500: 1.125rem;
+  --fs-400: 1rem;
+  --fs-300: 0.9rem;
+  --fs-200: 0.78rem;
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.5;
+  --lh-loose: 1.7;
+
+  /* spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1.25rem;
+  --space-5: 2rem;
+  --space-6: 2.5rem;
+  --space-7: 3.5rem;
+  --space-8: 5rem;
+
+  /* layout */
+  --content-max: 72rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --radius: 3px;
+  --border: 1px solid var(--rule);
+
+  /* motion */
+  --ease: 150ms ease;
+}
+
+/* ---------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------- */
+
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-400);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: var(--lh-tight);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+h1 { font-size: var(--fs-900); }
+h2 { font-size: var(--fs-800); }
+h3 { font-size: var(--fs-600); }
+
+p {
+  max-width: 62ch;
+}
+
+a {
+  text-decoration-color: var(--rule);
+  text-underline-offset: 0.2em;
+}
+
+/* ---------------------------------------------------------------------
+   Focus and motion
+--------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--frontier);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Layout utilities
+--------------------------------------------------------------------- */
+
+.wrap {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--space-8);
+  border-top: var(--border);
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: var(--space-4);
+  top: var(--space-4);
+}
+
+/* ---------------------------------------------------------------------
+   Component: figure
+   Every numeric value on the page runs through this: mono face,
+   tabular numerals, so figures line up wherever they appear.
+--------------------------------------------------------------------- */
+
+.figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------------
+   Component: eyebrow
+   Uppercase mono label with a rule running to the right margin.
+--------------------------------------------------------------------- */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.eyebrow::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* ---------------------------------------------------------------------
+   Component: section heading
+   Eyebrow + h2, used to open every major section.
+--------------------------------------------------------------------- */
+
+.section-head {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  max-width: 46rem;
+}
+
+.section-head h2 {
+  font-weight: 600;
+}
+
+.section-head__lede {
+  color: var(--muted);
+  font-size: var(--fs-500);
+}
+
+/* ---------------------------------------------------------------------
+   Component: prose
+   A group of body paragraphs, spaced and width-capped for reading.
+   Used for the About copy and the deep dive write-ups.
+--------------------------------------------------------------------- */
+
+.prose {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 60ch;
+  font-size: var(--fs-500);
+}
+
+/* ---------------------------------------------------------------------
+   Component: back link
+   Used at the top of deep dive pages to return to the landing page.
+--------------------------------------------------------------------- */
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--frontier);
+}
+
+/* ---------------------------------------------------------------------
+   Component: dive header
+   Title, course, tools, result block that opens every deep dive page.
+--------------------------------------------------------------------- */
+
+.dive-header {
+  padding-block: var(--space-7) var(--space-6);
+}
+
+.dive-header__title {
+  margin-top: var(--space-5);
+  font-size: var(--fs-800);
+}
+
+.dive-header .data-strip {
+  margin-top: var(--space-6);
+}
+
+/* ---------------------------------------------------------------------
+   Component: project card
+   Reflows cleanly at three, four or five cards.
+--------------------------------------------------------------------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+}
+
+.card {
+  --strip-bg: var(--card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-5);
+  text-decoration: none;
+  transition: border-color var(--ease), transform var(--ease);
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--frontier);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--fs-600);
+  font-weight: 600;
+}
+
+.card__line {
+  color: var(--muted);
+  font-size: var(--fs-400);
+  max-width: none;
+}
+
+.card .data-strip {
+  margin-top: auto;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card .data-strip > div:first-child {
+  grid-column: span 2;
+}
+
+.card .data-strip > div {
+  padding: var(--space-3);
+}
+
+.card .data-strip dd {
+  font-size: var(--fs-400);
+}
+
+.card__cue {
+  font-size: var(--fs-500);
+  color: var(--frontier);
+  transition: transform var(--ease);
+}
+
+.card:hover .card__cue,
+.card:focus-visible .card__cue {
+  transform: translateX(4px);
+}
+
+/* ---------------------------------------------------------------------
+   Component: data strip
+   Label/value pairs in a rule, used for quick facts and page headers.
+--------------------------------------------------------------------- */
+
+.data-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border-top: var(--border);
+  border-bottom: var(--border);
+}
+
+.data-strip > div {
+  padding: var(--space-4);
+  background: var(--strip-bg, var(--paper));
+}
+
+.data-strip dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: var(--space-2);
+}
+
+.data-strip dd {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ---------------------------------------------------------------------
+   Facts caption (sits directly under the hero)
+--------------------------------------------------------------------- */
+
+.facts {
+  border-top: none;
+  padding-block: var(--space-3) var(--space-6);
+}
+
+.facts .data-strip {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.facts .data-strip > div {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+}
+
+.facts .data-strip dt {
+  margin-bottom: 0;
+}
+
+.facts .data-strip dt::after {
+  content: ":";
+}
+
+.facts .data-strip dd {
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  font-weight: 400;
+}
+
+/* ---------------------------------------------------------------------
+   Component: data table
+   Proper tables for the numbers in a deep dive, row labels in
+   Archivo, figures in mono via .figure on each numeric cell.
+--------------------------------------------------------------------- */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: var(--space-5);
+}
+
+.data-table th,
+.data-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: right;
+  border-bottom: var(--border);
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+
+.data-table thead th {
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 2px solid var(--ink);
+}
+
+.data-table tbody th {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------
+   Component: chart
+   Placeholder frame for an exported chart from assets/charts/.
+--------------------------------------------------------------------- */
+
+.chart {
+  margin-block: var(--space-6);
+  border: var(--border);
+  background: var(--card);
+  padding: var(--space-4);
+}
+
+.chart img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: var(--paper);
+}
+
+.chart figcaption {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------------
+   Component: footer
+--------------------------------------------------------------------- */
+
+.site-footer {
+  border-top: var(--border);
+  padding-block: var(--space-6);
+}
+
+.site-footer .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  color: var(--muted);
+}
+
+.site-footer a {
+  color: var(--muted);
+}
+
+.site-footer a:hover {
+  color: var(--frontier);
+}
+
+/* ---------------------------------------------------------------------
+   Hero (landing page)
+--------------------------------------------------------------------- */
+
+.hero {
+  padding-block: var(--space-7) var(--space-4);
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.hero__name {
+  font-weight: 800;
+}
+
+.hero__role {
+  margin-top: var(--space-4);
+  font-size: var(--fs-500);
+  color: var(--muted);
+  max-width: none;
+}
+
+.contact-chips {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+}
+
+.contact-chips li:not(:last-child)::after {
+  content: "\00B7";
+  color: var(--rule);
+  margin-inline: var(--space-4);
+}
+
+.contact-chips a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+}
+
+.contact-chips a:hover {
+  color: var(--frontier);
+  text-decoration-color: var(--frontier);
+}
+
+/*
+  No hero visual for now — the name and positioning line run full width
+  instead. Reinstate this block, and the two-column .hero__inner rule
+  above, when a real exported chart is ready to sit here.
+
+.hero__inner {
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.hero__visual {
+  border: var(--border);
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.hero__visual svg {
+  width: 100%;
+  height: auto;
+}
+*/
+
+/* ---------------------------------------------------------------------
+   Experience
+--------------------------------------------------------------------- */
+
+.role-list {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.role {
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: var(--space-5);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.role__title {
+  font-weight: 600;
+}
+
+.role__org {
+  margin-top: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  color: var(--muted);
+}
+
+.role__desc {
+  color: var(--ink);
+  max-width: 62ch;
+}
+
+/* ---------------------------------------------------------------------
+   Toolkit
+--------------------------------------------------------------------- */
+
+.toolkit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-5);
+}
+
+.toolkit-group__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-200);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--frontier);
+  margin-bottom: var(--space-2);
+}
+
+.toolkit-group__items {
+  font-size: var(--fs-500);
+  max-width: none;
+}
+
+/* ---------------------------------------------------------------------
+   Contact
+--------------------------------------------------------------------- */
+
+.contact {
+  background: var(--ink);
+  color: var(--paper);
+  border-top: none;
+}
+
+.contact .eyebrow,
+.contact .section-head__lede {
+  color: var(--rule);
+}
+
+.contact .eyebrow::after {
+  background: var(--muted);
+}
+
+.contact h2 {
+  color: var(--paper);
+}
+
+.contact-methods {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  font-family: var(--font-mono);
+  font-size: var(--fs-400);
+}
+
+.contact-methods a {
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+}
+
+.contact-methods a:hover {
+  color: var(--signal);
+  text-decoration-color: var(--signal);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--frontier);
+  color: var(--frontier);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-300);
+  text-decoration: none;
+  border-radius: var(--radius);
+  transition: background var(--ease), color var(--ease);
+}
+
+.button:hover {
+  background: var(--frontier);
+  color: var(--card);
+}
+
+.contact .button {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+.contact .button:hover {
+  background: var(--signal);
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------------
+   Responsive
+--------------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  /*
+  .hero__visual {
+    max-width: 22rem;
+  }
+  */
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --gutter: 1rem;
+  }
+
+  .section {
+    padding-block: var(--space-7);
+  }
+
+  .card .data-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .card .data-strip > div:first-child {
+    grid-column: span 1;
+  }
+
+  .facts .data-strip {
+    grid-template-columns: 1fr;
+  }
+}

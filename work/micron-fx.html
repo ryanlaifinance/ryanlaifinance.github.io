@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micron FX exposure and hedging · Ryan Lai</title>
+<meta name="description" content="Micron carries a positive FX beta. A two-factor regression, a 10-K cross-check, and what a DXY futures hedge actually costs against diversification.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="dive-header">
+  <div class="wrap">
+    <a class="back-link" href="../index.html">&larr; Back to portfolio</a>
+    <h1 class="dive-header__title">Micron benefits from a strong US dollar. Should you hedge that away?</h1>
+    <dl class="data-strip">
+      <div>
+        <dt>Course</dt>
+        <dd>FINS3616 International Business Finance, UNSW, T1 2026</dd>
+      </div>
+      <div>
+        <dt>Tools</dt>
+        <dd>Excel, FactSet</dd>
+      </div>
+      <div>
+        <dt>Result</dt>
+        <dd class="figure">90/100 (HD)</dd>
+      </div>
+    </dl>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="section" aria-labelledby="the-question-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">01 / 06</p>
+        <h2 id="the-question-heading">The question</h2>
+      </div>
+      <div class="prose">
+        <p>
+          Micron Technology is a US semiconductor company headquartered in Idaho. The textbook
+          expectation for a US multinational is a negative FX beta: it earns revenue abroad, so
+          a stronger dollar hurts it. Coca-Cola and Procter &amp; Gamble behave that way.
+        </p>
+        <p>
+          Micron does not. I measured its currency exposure over 280 months and got a positive
+          FX beta, which means a stronger dollar helps it. The question then becomes whether an
+          investor holding Micron should hedge that exposure at all, and what it costs if they
+          do.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="data-and-method-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">02 / 06</p>
+        <h2 id="data-and-method-heading">Data and method</h2>
+      </div>
+      <div class="prose">
+        <p>
+          I ran a two-factor regression of Micron's monthly excess return on the market excess
+          return and the return on the ICE US Dollar Index, using 280 monthly observations from
+          FactSet. Adding DXY alongside the market factor separates currency sensitivity from
+          Micron's general cyclicality, which matters here because memory is a highly cyclical
+          business and the two effects would otherwise be confounded.
+        </p>
+        <p>
+          I then checked the regression against Micron's own disclosures rather than trusting the
+          coefficient on its own. The FY2018 and FY2024 10-K filings describe where the revenue
+          and the costs actually sit.
+        </p>
+        <p>
+          For the hedge I used ICE US Dollar Index futures: notional of $1,000 times the index
+          level, cash settled quarterly, so four front-quarter contracts cover a one-year holding
+          period.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="results-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">03 / 06</p>
+        <h2 id="results-heading">Results</h2>
+      </div>
+      <div class="prose">
+        <figure class="chart">
+          <img src="../assets/charts/micron-fx-regression.png" alt="Scatter plot of Micron's monthly excess return against the ICE US Dollar Index return across 280 months, with a positively sloped fitted regression line showing Micron's return rising as the dollar strengthens.">
+          <figcaption><strong>Chart 1.</strong> Micron monthly excess return against DXY return, with the fitted line.</figcaption>
+        </figure>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Estimate</th>
+              <th scope="col">t-stat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Market beta</th>
+              <td class="figure">1.825</td>
+              <td class="figure">10.70</td>
+            </tr>
+            <tr>
+              <th scope="row">FX beta</th>
+              <td class="figure">+1.184</td>
+              <td class="figure">3.55</td>
+            </tr>
+            <tr>
+              <th scope="row">Adjusted R&sup2;</th>
+              <td class="figure">0.288</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          Both coefficients are significant well below the 5% level, and the joint F-statistic of
+          57.35 confirms they matter together.
+        </p>
+        <p>
+          Statistical significance is not the same as economic significance, so I scaled each
+          coefficient by the volatility of its factor. A one standard deviation move in the market
+          (4.35%) moves Micron by 7.93%. A one standard deviation move in DXY (2.22%) moves it by
+          2.63%. The market factor is about three times more economically important, even though
+          both coefficients are significant.
+        </p>
+        <p>
+          The 10-K filings explain the sign. Micron's functional currency is the US dollar and
+          the substantial majority of its sales are transacted in dollars, but a significant
+          portion of its manufacturing cost base sits in yen, Taiwan dollars and Singapore
+          dollars. Revenue in USD, costs in Asian currencies. A stronger dollar compresses the
+          cost base while leaving revenue intact, which is exactly the exposure the regression
+          picked up.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="sizing-the-hedge-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">04 / 06</p>
+        <h2 id="sizing-the-hedge-heading">Sizing the hedge, and what it costs</h2>
+      </div>
+      <div class="prose">
+        <p>
+          For a USD 1M equity position, the FX beta gives an effective DXY exposure of
+          $1,184,300. At a December 2024 index level of 108.49, each contract carries a notional
+          of $108,490, which is 10.92 contracts, rounded to 11. The beta is positive, so the
+          hedge is a short.
+        </p>
+        <p>
+          I then ran the position through a stress scenario where DXY rises from 90 to 100 and
+          the stock gains 20%, with 0.5% transaction costs on both legs.
+        </p>
+
+        <table class="data-table">
+          <tbody>
+            <tr>
+              <th scope="row">Stock, net of costs</th>
+              <td class="figure">+$189,000</td>
+            </tr>
+            <tr>
+              <th scope="row">Futures leg</th>
+              <td class="figure">&minus;$130,650</td>
+            </tr>
+            <tr>
+              <th scope="row">Net payoff</th>
+              <td class="figure">+$58,350</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          The hedge worked. It also consumed 69% of the gain. That is the real finding: for an
+          investor whose FX exposure is a tailwind rather than a risk, a full futures overlay is
+          an expensive way to buy certainty.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-concluded-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">05 / 06</p>
+        <h2 id="what-i-concluded-heading">What I concluded</h2>
+      </div>
+      <div class="prose">
+        <p>
+          Hedging Micron with DXY futures is defensible if the mandate is to isolate the equity
+          view, but it is a bad default. The cheaper route is diversification, so I tested it.
+        </p>
+        <p>
+          Caterpillar is the classic exporter: foreign currency revenue, dollar cost base. It
+          prices out at an FX beta of &minus;0.765. Paired with Micron in equal weight, the
+          portfolio FX beta falls to +0.210 and stops being significant at the 5% level.
+        </p>
+
+        <figure class="chart">
+          <img src="../assets/charts/micron-fx-beta-portfolio.png" alt="Bar chart comparing FX beta for Micron alone at +1.184, Caterpillar alone at -0.765, and an equal-weighted portfolio of the two at +0.210, showing the combined position's much smaller currency exposure.">
+          <figcaption><strong>Chart 2.</strong> FX beta for Micron, Caterpillar and the combined portfolio.</figcaption>
+        </figure>
+
+        <p>
+          That is an 82% reduction in currency exposure. Micron alone moves &plusmn;2.63% on a
+          one sigma DXY move; the portfolio moves &plusmn;0.47%. Same result as the futures
+          overlay, no ongoing cost, no margin.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="what-i-would-do-differently-heading">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">06 / 06</p>
+        <h2 id="what-i-would-do-differently-heading">What I would do differently</h2>
+      </div>
+      <div class="prose">
+        <p>
+          I estimated a single FX beta across 280 months, but Micron's manufacturing footprint
+          changed a lot over that period. A rolling window would show whether the exposure is
+          stable or drifting, which matters if you are sizing a hedge off it today.
+        </p>
+        <p>
+          DXY is also a blunt instrument here. Micron's costs sit in yen, Taiwan dollars and
+          Singapore dollars, and DXY is weighted heavily toward the euro. A currency basket
+          matched to the actual cost base would hedge the exposure the filings describe, rather
+          than a proxy for it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>Ryan Lai · Sydney</span>
+    <a href="mailto:hoanganhlomo@gmail.com">hoanganhlomo@gmail.com</a>
+  </div>
+</footer>
+
+</body>
+</html>

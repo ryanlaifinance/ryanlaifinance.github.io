@@ -1,0 +1,8 @@
+﻿*.xlsx
+*.csv
+*.pdf
+!assets/cv.pdf
+
+CLAUDE.md
+index-copy.md
+*-copy.md
