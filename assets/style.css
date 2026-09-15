@@ -91,7 +91,7 @@ button {
   --content-max: 72rem;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
   --radius: 3px;
-  --border: 1px solid var(--rule);
+  --border: 2px solid var(--muted);
 
   /* motion */
   --ease: 150ms ease;
@@ -405,8 +405,6 @@ a:active {
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
   background: var(--muted);
-  border-top: 2px solid var(--muted);
-  border-bottom: 2px solid var(--muted);
 }
 
 .card .data-strip > div:first-child {
@@ -507,13 +505,6 @@ a:active {
    so the page reads as more than six identical blocks. Toolkit sits
    on a tinted ground for the same reason.
 --------------------------------------------------------------------- */
-
-.about,
-.work,
-.experience,
-.toolkit {
-  border-top: 2px solid var(--muted);
-}
 
 .work {
   padding-block: calc(var(--space-8) + var(--space-6));
