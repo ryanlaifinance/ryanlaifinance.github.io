@@ -134,6 +134,10 @@ a {
   text-underline-offset: 0.2em;
 }
 
+a:active {
+  color: var(--signal);
+}
+
 /* ---------------------------------------------------------------------
    Focus and motion
 --------------------------------------------------------------------- */
@@ -150,6 +154,24 @@ a {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------------------------------------------------------------------
+   Scroll-in reveal (landing page)
+   JS toggles .is-visible as each section enters the viewport. The
+   reduced-motion rule above already collapses the transition to
+   near-zero, so no separate reduced-motion override is needed here.
+--------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* ---------------------------------------------------------------------
@@ -344,26 +366,28 @@ a {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  background: var(--card);
-  border: var(--border);
+  background: color-mix(in srgb, var(--card), var(--ink) 10%);
+  border: 2px solid var(--muted);
   border-radius: var(--radius);
   padding: var(--space-5);
   text-decoration: none;
-  transition: border-color var(--ease), transform var(--ease);
+  box-shadow: 0 1px 3px rgba(14, 26, 34, 0.06);
+  transition: border-color var(--ease), transform var(--ease), box-shadow var(--ease);
 }
 
 .card:hover,
 .card:focus-visible {
   border-color: var(--frontier);
+  box-shadow: 0 16px 32px rgba(14, 26, 34, 0.18);
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
 }
 
 .card__title {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
   font-size: var(--fs-600);
@@ -379,6 +403,10 @@ a {
 .card .data-strip {
   margin-top: auto;
   grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  background: var(--muted);
+  border-top: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
 }
 
 .card .data-strip > div:first-child {
@@ -395,7 +423,7 @@ a {
 
 .card__cue {
   font-size: var(--fs-500);
-  color: var(--frontier);
+  color: var(--signal);
   transition: transform var(--ease);
 }
 
@@ -471,6 +499,32 @@ a {
   font-family: var(--font-mono);
   font-size: var(--fs-300);
   font-weight: 400;
+}
+
+/* ---------------------------------------------------------------------
+   Section rhythm (landing page)
+   Selected work gets more room and a heavier heading than the rest,
+   so the page reads as more than six identical blocks. Toolkit sits
+   on a tinted ground for the same reason.
+--------------------------------------------------------------------- */
+
+.about,
+.work,
+.experience,
+.toolkit {
+  border-top: 2px solid var(--muted);
+}
+
+.work {
+  padding-block: calc(var(--space-8) + var(--space-6));
+}
+
+.work .section-head h2 {
+  font-weight: 800;
+}
+
+.toolkit {
+  background: var(--card);
 }
 
 /* ---------------------------------------------------------------------
