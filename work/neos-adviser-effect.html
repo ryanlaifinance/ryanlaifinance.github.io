@@ -1,254 +1,159 @@
 <!DOCTYPE html>
 <html lang="en-AU">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The adviser effect at NEOS · Ryan Lai</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The adviser effect at NEOS | Ryan Lai</title>
 <meta name="description" content="Four models plateaued at AUC 0.69 predicting NEOS recommendations. A mixed-effects model showed the missing variable was the adviser, not the customer.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2314554e'/%3E%3Ctext%20x='32'%20y='44'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='34'%20font-weight='700'%20fill='%23e7eaec'%20text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231F4D42'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='600' fill='%23F4F5F2' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
 
-<header class="dive-header">
-  <div class="wrap">
-    <a class="back-link" href="../index.html">&larr; Back to portfolio</a>
-    <h1 class="dive-header__title">Four models plateaued at AUC 0.69. The missing variable was the adviser.</h1>
-    <dl class="data-strip data-strip--wrap">
-      <div>
-        <dt>Course</dt>
-        <dd>COMM3501 Quantitative Business Analytics, UNSW</dd>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav><div class="wrap">
+  <a class="name" href="../index.html">Ryan Lai</a>
+  <a class="back" href="../index.html#work">All work</a>
+</div></nav>
+
+<header><div class="wrap">
+  <h1>Four models plateaued at AUC 0.69. The missing variable was the adviser.</h1>
+  <p class="standfirst">A life insurer wanted to know how to get recommended more often. The answer decided whether the money went into consumer marketing or into adviser relationships.</p>
+
+  <div class="finding">
+    <div class="finding-grid c3">
+      <div class="fcell">
+        <span class="flabel">All 18 customer and product features</span>
+        <span class="fnum">0.684</span>
+        <span class="funit">AUC</span>
       </div>
-      <div>
-        <dt>Type</dt>
-        <dd>Group project, five people. The diagnostic, the mixed-effects model and the interpretation were mine.</dd>
+      <div class="fcell">
+        <span class="flabel">Adviser identity, on its own</span>
+        <span class="fnum pos">0.863</span>
+        <span class="funit">AUC</span>
       </div>
-      <div>
-        <dt>Tools</dt>
-        <dd>R (lme4, randomForest, e1071, rpart, pROC)</dd>
+      <div class="fcell">
+        <span class="flabel">Share of the decision that is the adviser</span>
+        <span class="fnum pos">67%</span>
+        <span class="funit">intraclass correlation 0.673</span>
       </div>
-    </dl>
+    </div>
+    <p class="finding-note">Four algorithms with different assumptions all stalled in the same place. <strong>When that happens the constraint is the information, not the algorithm.</strong></p>
   </div>
-</header>
 
-<main id="main" class="dive-main">
+  <div class="meta">
+    <div>Course <b>COMM3501 Quantitative Business Analytics, UNSW</b></div>
+    <div>Type <b>Group project, five people</b></div>
+    <div>My sections <b>The diagnostic, the mixed-effects model, the interpretation</b></div>
+    <div>Tools <b>R (lme4, randomForest, e1071, rpart, pROC)</b></div>
+  </div>
+</div></header>
 
-  <section class="section" aria-labelledby="the-question-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">01 / 06</p>
-        <h2 id="the-question-heading">The question</h2>
-      </div>
-      <div class="prose">
-        <p>
-          NEOS is a life insurer that sells nothing directly. Every policy goes through a
-          financial adviser, so the client's question was how to get NEOS higher on
-          advisers' recommendation lists.
-        </p>
-        <p>
-          That splits into one testable question: is a NEOS recommendation driven by the
-          customer sitting in front of the adviser, or by the adviser? The answer decides
-          where the money goes, into consumer marketing and pricing, or into adviser
-          relationships.
-        </p>
-      </div>
-    </div>
-  </section>
+<div class="wrap">
+<article class="doc" id="main">
 
-  <section class="section" aria-labelledby="data-and-method-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">02 / 06</p>
-        <h2 id="data-and-method-heading">Data and method</h2>
+  <h2>The question</h2>
+  <p>NEOS is a life insurer that sells nothing directly. Every policy goes through a financial adviser, so the client's question was how to get NEOS higher on advisers' recommendation lists.</p>
+  <p>That splits into one testable question: is a NEOS recommendation driven by the customer sitting in front of the adviser, or by the adviser? The answer decides where the money goes, into consumer marketing and pricing, or into adviser relationships.</p>
+
+  <h2>Data and method</h2>
+  <p>The starting dataset was 162,937 IRESS recommendation records covering customer profiles, products, premiums and adviser IDs.</p>
+  <p>The first real finding came before any modelling. NEOS appeared in 0 of 75,218 hybrid-commission rows and 0 of 7,670 nil rows, which is not a market pattern, it is a data artefact. Commission labels are formatted by each insurer, so 183 of 187 labels map to exactly one company. Left in, commission predicts NEOS at AUC 1.00 and the model learns nothing. We dropped it and scoped to the upfront and level segment where NEOS actually competes against AIA, ClearView, BT and Zurich. That left 66,019 recommendations across 4,999 advisers, at a 30% NEOS rate.</p>
+  <p>We split 70/30 by adviser rather than by row. A random row split puts the same adviser on both sides, so the model scores well by recognising advisers instead of learning anything, and NEOS's real problem is advisers it has not converted yet. We ranked on AUC, not accuracy, because at a 30% base rate a model that always says no scores 70%.</p>
+  <p>Four baselines: logistic regression, a pruned decision tree, random forest and naive Bayes. They were chosen to fail differently, from rigid and interpretable to flexible and opaque.</p>
+
+  <h2>Results</h2>
+  <figure>
+    <figcaption>Four models with very different assumptions, all landing within 0.09 of each other on advisers they had never seen.</figcaption>
+    <div class="bars">
+      <div class="bar-row">
+        <span class="bar-label">Random forest</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+        <span class="bar-val">0.690</span>
       </div>
-      <div class="prose">
-        <p>
-          The starting dataset was 162,937 IRESS recommendation records covering customer
-          profiles, products, premiums and adviser IDs.
-        </p>
-        <p>
-          The first real finding came before any modelling. NEOS appeared in 0 of 75,218
-          hybrid-commission rows and 0 of 7,670 nil rows, which is not a market pattern, it
-          is a data artefact. Commission labels are formatted by each insurer, so 183 of 187
-          labels map to exactly one company. Left in, commission predicts NEOS at AUC 1.00
-          and the model learns nothing. We dropped it and scoped to the upfront and level
-          segment where NEOS actually competes against AIA, ClearView, BT and Zurich. That
-          left 66,019 recommendations across 4,999 advisers, at a 30% NEOS rate.
-        </p>
-        <p>
-          We split 70/30 by adviser rather than by row. A random row split puts the same
-          adviser on both sides, so the model scores well by recognising advisers instead of
-          learning anything, and NEOS's real problem is advisers it has not converted yet.
-          We ranked on AUC, not accuracy, because at a 30% base rate a model that always says
-          no scores 70%.
-        </p>
-        <p>
-          Four baselines: logistic regression, a pruned decision tree, random forest and
-          naive Bayes. They were chosen to fail differently, from rigid and interpretable to
-          flexible and opaque.
-        </p>
+      <div class="bar-row">
+        <span class="bar-label">Logistic regression</span>
+        <span class="bar-track"><span class="bar-fill" style="width:96.8%"></span></span>
+        <span class="bar-val">0.684</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Naive Bayes</span>
+        <span class="bar-track"><span class="bar-fill" style="width:74.7%"></span></span>
+        <span class="bar-val">0.642</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Pruned decision tree</span>
+        <span class="bar-track"><span class="bar-fill" style="width:54.2%"></span></span>
+        <span class="bar-val">0.603</span>
       </div>
     </div>
-  </section>
+    <p class="axis-note">AUC on held-out advisers. The track starts at 0.50, which is chance, so the bars show the gain over guessing rather than the raw score.</p>
+  </figure>
 
-  <section class="section" aria-labelledby="results-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">03 / 06</p>
-        <h2 id="results-heading">Results</h2>
+  <div class="tw"><table>
+    <caption>Baseline models, evaluated on advisers held out of training.</caption>
+    <thead><tr><th>Model</th><th>AUC</th><th>Sensitivity</th></tr></thead>
+    <tbody>
+      <tr><td>Random forest</td><td>0.690</td><td>21%</td></tr>
+      <tr><td>Logistic regression</td><td>0.684</td><td>20%</td></tr>
+      <tr><td>Naive Bayes</td><td>0.642</td><td>43%</td></tr>
+      <tr><td>Pruned decision tree</td><td>0.603</td><td>18%</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Random forest beat logistic by 0.006, which is nothing. A 200-tree ensemble found essentially what a linear model found. Sensitivity sat near 20%, so the best model missed four out of five NEOS recommendations.</p>
+  <p>When four algorithms with different assumptions plateau together, the constraint is the information, not the algorithm. So I tested what was missing directly. All 18 customer and product features together gave AUC 0.684. Adviser identity alone, using a leave-one-out tendency that excludes the row being predicted, gave 0.863. And 65.8% of advisers were all-or-nothing: they either always recommend NEOS or never have.</p>
+
+  <h2>Why adviser identity could not just be added</h2>
+  <p>This was the part that took the longest. Adviser ID does not go into these models as a feature for four separate reasons. R's random forest caps categorical predictors at 53 levels and we had 4,999. Validation advisers never appear in training, so there is no fitted coefficient to predict with. As dummy variables, 4,999 columns where two thirds of advisers are all-or-nothing produces quasi-separation, and the coefficients run to infinity. And there is not enough data per adviser: the median is five recommendations, half have five or fewer, 18% have exactly one.</p>
+  <p>A random intercept solves all four. It estimates one parameter, how much advisers vary as a group, instead of 4,999. It applies to advisers the model has never seen. And it shrinks thinly observed advisers toward the average in proportion to how little data they have.</p>
+
+  <h2>What I concluded</h2>
+  <p>I fit the mixed-effects model on the same 66,019 rows, same features, dropping adviser volume since the random intercept absorbs it.</p>
+  <p>With nothing but the adviser in the model, the intraclass correlation is 0.737. Adding every customer and product feature we had, age, gender, income, occupation, product mix, cover, price, moved it only to 0.673. All of that data explains about a quarter of the adviser gap.</p>
+
+  <figure>
+    <figcaption>The same model, tested two ways. The gap between them is the adviser effect.</figcaption>
+    <div class="bars">
+      <div class="bar-row">
+        <span class="bar-label">Advisers it had<br>never seen</span>
+        <span class="bar-track"><span class="bar-fill" style="width:43.5%"></span></span>
+        <span class="bar-val">0.676</span>
       </div>
-      <div class="prose">
-        <figure class="chart">
-          <img src="../assets/charts/neos-model-auc.svg" alt="Horizontal bar chart comparing AUC for four baseline models: random forest 0.690, logistic regression 0.684, naive Bayes 0.642, and pruned decision tree 0.603, showing all four clustered closely together.">
-          <figcaption><strong>Chart 1.</strong> AUC on held-out advisers for the four baseline models.</figcaption>
-        </figure>
-
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th scope="col">Model</th>
-              <th scope="col">AUC</th>
-              <th scope="col">Sensitivity</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th scope="row">Random forest</th>
-              <td class="figure">0.690</td>
-              <td class="figure">21%</td>
-            </tr>
-            <tr>
-              <th scope="row">Logistic regression</th>
-              <td class="figure">0.684</td>
-              <td class="figure">20%</td>
-            </tr>
-            <tr>
-              <th scope="row">Naive Bayes</th>
-              <td class="figure">0.642</td>
-              <td class="figure">43%</td>
-            </tr>
-            <tr>
-              <th scope="row">Pruned decision tree</th>
-              <td class="figure">0.603</td>
-              <td class="figure">18%</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p>
-          Random forest beat logistic by 0.006, which is nothing. A 200-tree ensemble found
-          essentially what a linear model found. Sensitivity sat near 20%, so the best model
-          missed four out of five NEOS recommendations.
-        </p>
-        <p>
-          When four algorithms with different assumptions plateau together, the constraint
-          is the information, not the algorithm. So I tested what was missing directly. All
-          18 customer and product features together gave AUC 0.684. Adviser identity alone,
-          using a leave-one-out tendency that excludes the row being predicted, gave 0.863.
-          And 65.8% of advisers were all-or-nothing: they either always recommend NEOS or
-          never have.
-        </p>
+      <div class="bar-row">
+        <span class="bar-label">Adviser known<br>to the model</span>
+        <span class="bar-track"><span class="bar-fill pos" style="width:100%"></span></span>
+        <span class="bar-val pos">0.905</span>
       </div>
     </div>
-  </section>
+    <p class="axis-note">AUC, track starting at 0.50. Same features, same rows, same model. Only knowing who the adviser is changes.</p>
+  </figure>
 
-  <section class="section" aria-labelledby="why-adviser-identity-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">04 / 06</p>
-        <h2 id="why-adviser-identity-heading">Why adviser identity could not just be added</h2>
-      </div>
-      <div class="prose">
-        <p>
-          This was the part that took the longest. Adviser ID does not go into these models
-          as a feature for four separate reasons. R's random forest caps categorical
-          predictors at 53 levels and we had 4,999. Validation advisers never appear in
-          training, so there is no fitted coefficient to predict with. As dummy variables,
-          4,999 columns where two thirds of advisers are all-or-nothing produces
-          quasi-separation, and the coefficients run to infinity. And there is not enough
-          data per adviser: the median is five recommendations, half have five or fewer, 18%
-          have exactly one.
-        </p>
-        <p>
-          A random intercept solves all four. It estimates one parameter, how much advisers
-          vary as a group, instead of 4,999. It applies to advisers the model has never
-          seen. And it shrinks thinly observed advisers toward the average in proportion to
-          how little data they have.
-        </p>
-      </div>
-    </div>
-  </section>
+  <p class="pull">The adviser is not one factor among many. It is roughly two thirds of the picture.</p>
+  <p>The typical adviser recommends NEOS 6.4% of the time against a 30% segment rate, meaning the average is carried by a NEOS-heavy minority.</p>
+  <p>The recommendation follows: win advisers, not cases. Target the advisers who already recommend NEOS occasionally, since they are the shortest path, rather than spending on consumer marketing that never reaches the actual decision-maker.</p>
 
-  <section class="section" aria-labelledby="what-i-concluded-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">05 / 06</p>
-        <h2 id="what-i-concluded-heading">What I concluded</h2>
-      </div>
-      <div class="prose">
-        <p>
-          I fit the mixed-effects model on the same 66,019 rows, same features, dropping
-          adviser volume since the random intercept absorbs it.
-        </p>
-        <p>
-          With nothing but the adviser in the model, the intraclass correlation is 0.737.
-          Adding every customer and product feature we had, age, gender, income, occupation,
-          product mix, cover, price, moved it only to 0.673. All of that data explains about
-          a quarter of the adviser gap.
-        </p>
+  <h2>What I would do differently</h2>
+  <p>The dataset had no adviser-level variables at all: no panel membership, prior insurer relationships, service history or underwriting experience. We proved the adviser effect exists and sized it, but we could not explain it. That is the obvious next dataset to ask NEOS for.</p>
+  <p>The data is also observational. Premium came out as a strong customer-level predictor, but that does not mean cutting premiums lifts recommendations.</p>
 
-        <figure class="chart">
-          <img src="../assets/charts/neos-adviser-effect.svg" alt="Bar chart comparing the mixed-effects model's AUC when tested on advisers unseen in training, 0.676, against advisers already known to the model, 0.905, illustrating the size of the adviser effect.">
-          <figcaption><strong>Chart 2.</strong> Same model, tested two ways: AUC 0.676 on advisers it had never seen, 0.905 when the adviser is known. The gap is the adviser effect.</figcaption>
-        </figure>
+</article>
+</div>
 
-        <p>
-          So the adviser is not one factor among many, it is roughly two thirds of the
-          picture. The typical adviser recommends NEOS 6.4% of the time against a 30%
-          segment rate, meaning the average is carried by a NEOS-heavy minority.
-        </p>
-        <p>
-          The recommendation follows: win advisers, not cases. Target the advisers who
-          already recommend NEOS occasionally, since they are the shortest path, rather than
-          spending on consumer marketing that never reaches the actual decision-maker.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="what-i-would-do-differently-heading">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">06 / 06</p>
-        <h2 id="what-i-would-do-differently-heading">What I would do differently</h2>
-      </div>
-      <div class="prose">
-        <p>
-          The dataset had no adviser-level variables at all: no panel membership, prior
-          insurer relationships, service history or underwriting experience. We proved the
-          adviser effect exists and sized it, but we could not explain it. That is the
-          obvious next dataset to ask NEOS for.
-        </p>
-        <p>
-          The data is also observational. Premium came out as a strong customer-level
-          predictor, but that does not mean cutting premiums lifts recommendations.
-        </p>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="site-footer">
-  <div class="wrap">
-    <span>Ryan Lai · Sydney</span>
+<footer><div class="wrap">
+  <div class="nextprev">
+    <a href="interstellar-credit-pipeline.html">Next: the Interstellar Bank credit pipeline &rarr;</a>
+    <a href="../index.html#work">All work</a>
+  </div>
+  <div class="colophon" style="margin-top:2.2rem">
+    <span>Ryan Lai &middot; Sydney</span>
     <a href="mailto:hoanganhlomo@gmail.com">hoanganhlomo@gmail.com</a>
   </div>
-</footer>
+</div></footer>
 
 </body>
 </html>

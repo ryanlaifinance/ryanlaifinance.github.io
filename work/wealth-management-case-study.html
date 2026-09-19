@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wealth management case study | Ryan Lai</title>
+<meta name="description" content="A retirement model for a hypothetical Australian household: four strategies for $34,000 a year, and what the numbers said.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<nav><div class="wrap">
+  <span class="name">Ryan Lai</span>
+  <a class="back" href="../index.html#work">All work</a>
+</div></nav>
+
+<header><div class="wrap">
+  <h1>Four ways to use $34,000 a year</h1>
+  <p class="standfirst">A retirement model for an Australian household in their late thirties, built to test which use of their spare income actually gets them where they want to go.</p>
+
+  <div class="finding">
+    <div class="finding-grid c4">
+      <div class="fcell"><span class="flabel">Leave it invested</span><span class="fnum neg">&minus;$24,266</span></div>
+      <div class="fcell"><span class="flabel">All to super</span><span class="fnum neg">&minus;$4,173</span></div>
+      <div class="fcell"><span class="flabel">All to mortgage</span><span class="fnum neg">&minus;$28,243</span></div>
+      <div class="fcell"><span class="flabel">Split evenly</span><span class="fnum neg">&minus;$17,078</span></div>
+    </div>
+    <p class="finding-note">Annual shortfall against their retirement income objective, in today's dollars. <strong>No strategy reaches it.</strong> The largest single gain available to them turned out to have nothing to do with the allocation question they asked.</p>
+  </div>
+
+  <div class="meta">
+    <div><b>8</b> sheets</div>
+    <div><b>8,332</b> formulas</div>
+    <div><b>30</b>-year projection</div>
+    <div><b>200</b> simulated return paths</div>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <section class="choose">
+    <p>Two write-ups of the same project. Pick either.</p>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-build" aria-controls="p-build" aria-selected="true">How I built it</button>
+      <button class="tab" role="tab" id="t-advice" aria-controls="p-advice" aria-selected="false">The advice the client receives</button>
+    </div>
+  </section>
+
+  <!-- ==================== BUILD ==================== -->
+  <article class="doc" id="p-build" role="tabpanel" aria-labelledby="t-build">
+    <p class="lede">The client is made up. Nothing here is personal financial advice. The figures behind the client come from published Australian data, listed below.</p>
+
+    <h2>Why I did this</h2>
+    <p>I took a wealth management course late in my degree and it changed how I thought about finance. Most of what I had built before that was market-facing. Portfolio optimisation, FX hedging, regressions on monthly returns. All useful, but it never really touched anyone. The question in wealth management is simpler and harder to avoid: is this household's money actually doing anything for them?</p>
+    <p>That stuck with me after the course ended, so I wanted to sit down and work through it properly instead of leaving it as something I had just read about.</p>
+    <p>The project has two parts. An Excel model, and a written recommendation. The model was the part I roughly knew how to do. Turning the output into advice for a specific household, with their own constraints and trade-offs, was the part I wanted to learn.</p>
+
+    <h2>Making up the client</h2>
+    <p>I thought about using a real person and decided not to. Giving personal financial advice in Australia needs an AFSL or authorisation under one, and I have neither. A made-up household avoids that entirely.</p>
+    <p>The problem with a made-up household is that anyone can invent one. So instead of picking numbers that felt right, I pulled them from published sources.</p>
+    <div class="tw"><table class="src">
+      <thead><tr><th>Input</th><th>Value</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Incomes</td><td>$105,000 and $88,000</td><td>ABS Average Weekly Earnings</td></tr>
+        <tr><td>Super balances</td><td>$92,000 and $68,000</td><td>ATO Taxation Statistics, 35&ndash;39 band</td></tr>
+        <tr><td>Fund fees</td><td>1.35% and 0.65%</td><td>APRA Quarterly Super Performance</td></tr>
+        <tr><td>Mortgage rate</td><td>5.90%</td><td>RBA housing lending rates</td></tr>
+        <tr><td>Retirement target</td><td>$78,566 a year</td><td>ASFA Retirement Standard, Mar 2026</td></tr>
+      </tbody>
+    </table></div>
+    <p>Daniel Whitmore is 38 and works in marketing. Priya Whitmore is 36 and is a nurse in the NSW public system. One child, aged 4. They owe $720,000 on a house in western Sydney, have $70,000 saved outside super, and have about $34,000 a year of pre-tax income left over that is not doing anything in particular.</p>
+    <p>Three things in that profile are deliberate.</p>
+    <p><strong>Priya's super is $24,000 behind Daniel's.</strong> She earns less and took 18 months out of work. This is a very common pattern in Australia and it is why the model keeps two separate super accounts instead of one household balance. Contribution caps and contributions tax apply per person, so you cannot merge them.</p>
+    <p><strong>They are in different types of fund.</strong> Daniel is in a retail fund, Priya is in an industry fund. That difference ended up producing the biggest single finding in the project, which I did not expect when I set it up.</p>
+    <p><strong>Priya wants money she can get to before 60.</strong> I put this in as a constraint rather than a preference. Without it the model gives one obvious answer, which is to put everything into super. With it, that answer is off the table no matter what the numbers say. Working out how to handle that was more interesting than the maths.</p>
+
+    <h2>The question</h2>
+    <p class="pull">Given $34,000 of pre-tax surplus a year, what split between super contributions, extra mortgage repayments and investing outside super gives them the best shot at their retirement target without breaking the liquidity constraint?</p>
+    <p>Everything in the model is there to answer that one sentence.</p>
+
+    <h2>How the model is put together</h2>
+    <p>Eight sheets, 8,332 formulas, no formula errors on recalculation.</p>
+    <ul>
+      <li><strong>ClientBrief</strong> has the household, the goals, the constraint, and where each input came from.</li>
+      <li><strong>Inputs</strong> is the control panel. Every number I chose sits here and nowhere else. Blue for inputs, black for formulas, yellow for the assumptions I was least sure about.</li>
+      <li><strong>Rules</strong> has every rate the government sets, current for FY2026-27. Tax scale, 12% super guarantee, $32,500 concessional cap, 15% contributions tax, Division 293, preservation age, the ASFA figures.</li>
+      <li><strong>Engine</strong> is the year-by-year projection, 43 columns across 30 rows, FY27 to FY56.</li>
+      <li><strong>Scenarios</strong> runs all four strategies side by side.</li>
+      <li><strong>Sensitivity</strong> has two grids and a fee comparison.</li>
+      <li><strong>MonteCarlo</strong> runs 200 simulated futures with random returns instead of a fixed 7%.</li>
+      <li><strong>Dashboard</strong> puts the comparison and four charts on one page.</li>
+    </ul>
+    <p>The reason the rates live on their own sheet is that they change almost every year, usually on 1 July. If they were scattered through the formulas, updating the model would mean hunting through thousands of cells and probably missing some. This way it is a fourteen-cell job.</p>
+
+    <h2>Decisions I had to make along the way</h2>
+    <p><strong>Progressive tax in one formula.</strong> The Rules sheet stores each bracket's incremental rate, which is that bracket's rate minus the one before it. A SUMPRODUCT then checks income against every threshold at once. It gives $24,120 on $105,000, which I worked out by hand first to make sure. I could have used nested IF statements but those break as soon as a bracket changes.</p>
+    <p><strong>Indexing the contribution cap.</strong> My first version held the cap flat at $32,500. With salaries growing 3% a year, both clients ended up breaching it around year 15 for no real reason. Real caps index to average weekly earnings, so I indexed it at wage growth.</p>
+    <p><strong>Half-year returns.</strong> Investment returns and fees are calculated on the opening balance plus half of that year's contributions. Contributions come in through the year rather than all on day one, so giving them a full year of growth would overstate things.</p>
+    <p><strong>What happens after the mortgage is paid.</strong> Once it clears, the repayment plus any extra redirects into investments. I missed this at first, and it made the mortgage strategy look much worse than it should have, because $55,789 a year was just vanishing from the model.</p>
+    <p><strong>Splitting salary sacrifice between the two of them.</strong> This one caught me out. The concessional cap includes employer contributions, not just what you choose to sacrifice. Daniel's employer already puts in $12,600, so he only has about $19,900 of room, not $32,500. If I had sent the whole $34,000 to one person it would have gone over the cap and the excess would be taxed at their marginal rate, which would cancel the benefit. The model splits it in proportion to salary instead. Daniel ends up at $31,097 and Priya at $26,063, both under, with zero excess in all 30 years.</p>
+    <p><strong>Making the comparison fair.</strong> This is the part I would say is most important and it is easy to get wrong. Salary sacrifice comes out of pre-tax income. Extra mortgage repayments and outside investing come out of your take-home pay. So $34,000 into super arrives as $28,900 after the 15% contributions tax, while the same $34,000 through your pay packet arrives as only $23,120 after a 32% marginal rate. The strategy table converts at the marginal rate so each option spends the same pre-tax amount. If I had just compared $34,000 into super against $34,000 onto the mortgage, super would have been quietly handed an extra $10,880 and the whole comparison would have meant nothing. The model shows exactly that $10,880 of tax saved in year one, which is how I checked the conversion works.</p>
+    <p><strong>A check column.</strong> Every row tests four things: no cap breach for either person, mortgage not negative, neither super balance negative. A cell at the top counts the failures. I wanted the model to stop rather than quietly produce numbers that look fine.</p>
+
+    <h2>Things I got wrong</h2>
+    <p>Two mistakes are worth writing down, mostly because finding them took longer than building the thing.</p>
+    <p>The first was that the strategy table wrote its zeros as text instead of numbers. Excel's MIN function ignores text, so the mortgage cleared in year one under every scenario and outside-super wealth ended up at $7.1 million. Every formula evaluated fine. Nothing flagged an error anywhere. I only found it because I checked the year one closing mortgage balance against a calculator and it did not match.</p>
+    <p class="pull">A clean recalculation only tells you your formulas work, not that they are right.</p>
+    <p>The second mistake was conceptual. I was comparing nominal balances at 2056 against the ASFA benchmark, which is quoted in today's dollars. Thirty years of 2.5% inflation roughly doubles the nominal number, so every strategy looked like it was smashing the target. Once I deflated everything back to today's dollars the conclusion of the whole project changed.</p>
+
+    <h2>What the model found</h2>
+    <p><strong>The standard benchmark turned out to be the wrong test.</strong> All four strategies clear the ASFA comfortable standard of $78,566 easily. Even the worst one finishes $683,531 above the lump sum benchmark in today's dollars. That tells you the benchmark is not separating the options, which makes sense because it is built for an average household and this one earns $193,000.</p>
+    <p>So I added a second target: replacing 70% of current income, which is the usual adviser convention and works out to $135,100 a year here. That is the test that actually distinguishes them.</p>
+    <div class="tw"><table>
+      <caption>All figures in today's dollars.</caption>
+      <thead><tr><th>&nbsp;</th><th>Base case</th><th>Salary sacrifice</th><th>Extra mortgage</th><th>Split 50/50</th></tr></thead>
+      <tbody>
+        <tr><td>Super at 67</td><td>$1,413,531</td><td>$2,891,693</td><td>$1,413,531</td><td>$2,152,612</td></tr>
+        <tr><td>Net wealth</td><td>$2,770,854</td><td>$3,273,166</td><td>$2,671,415</td><td>$2,950,551</td></tr>
+        <tr><td>Years to clear mortgage</td><td>24</td><td>24</td><td>13</td><td>17</td></tr>
+        <tr><td>Income at 4% drawdown</td><td>$110,834</td><td>$130,927</td><td>$106,857</td><td>$118,022</td></tr>
+        <tr><td>Shortfall vs $135,100</td><td class="n">&minus;$24,266</td><td class="n">&minus;$4,173</td><td class="n">&minus;$28,243</td><td class="n">&minus;$17,078</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>None of the strategies get there.</strong> The best one is still $4,173 a year short. So moving the surplus around does not solve the problem on its own, which I think is more useful than just ranking the four.</p>
+    <p><strong>The fee matters more than the strategy.</strong> Moving Daniel from a 1.35% fee to 0.65% is worth $200,907 in today's dollars over 30 years. The sensitivity grid puts that in perspective. At a 7% return, dropping the fee from 1.40% to 0.60% adds about $212,000, while lifting the return from 7.0% to 7.5% only adds about $128,000. So the fee decision beats a half-point improvement in returns, and unlike returns it is entirely within their control.</p>
+    <p><strong>The shortfall is not a market problem.</strong> The Monte Carlo run gives a median of around $2.65 million, with a 10th percentile of $1.6 million and a 90th of $4.64 million. Across 200 simulated futures, 92% clear the ASFA standard, but only 1% see super alone reach the 70% replacement capital. Good markets will not fix the gap, which is a stronger thing to be able to say than anything a single projection gives you.</p>
+
+    <h2>What the model does not do</h2>
+    <p>Six limitations are listed on the Rules sheet. The biggest by far is that the Age Pension is not modelled. On these balances the entitlement would probably be small, but including it would lift the projected income under every scenario and would likely narrow the gaps, because pension means testing treats super and non-super assets differently. If I extended the model, that is where I would start.</p>
+    <p>The others: Medicare levy is flat at 2% with no low-income shade-in, tax offsets are ignored, outside-super returns use an assumed tax drag rather than proper year-by-year CGT and franking, both clients are assumed to work straight through to 67, and the maximum contribution base is applied annually rather than quarterly.</p>
+    <p>Two more on method. The Monte Carlo draws returns from a normal distribution, and real equity returns have fatter tails than that, so the 10th percentile is probably a bit optimistic. And the model stops at 67, so it picks up sequencing risk while they are still contributing but not during drawdown, which is when it actually does the most damage.</p>
+
+    <h2>What I took from it</h2>
+    <p>The modelling side was mostly a matter of being careful. Getting the caps right, indexing what should be indexed, making sure the comparison was fair. The part I found harder, and more interesting, was everything after the numbers came out.</p>
+    <p>The model says put it all into super. It is clearly the strongest option on every financial measure. It also breaks the one rule Priya set, and no amount of extra decimal places changes that. Working out how to respond to that, and then writing it in a way she could actually read, was the real exercise.</p>
+  </article>
+
+  <!-- ==================== ADVICE ==================== -->
+  <article class="doc" id="p-advice" role="tabpanel" aria-labelledby="t-advice" hidden>
+    <p class="lede">A hypothetical case prepared as an academic exercise. Daniel and Priya Whitmore are not real people. Nothing in this document constitutes personal financial advice.</p>
+
+    <h2>1. Scope of this advice</h2>
+    <p>This advice addresses three matters you raised:</p>
+    <ul>
+      <li>The allocation of approximately $34,000 per annum of surplus pre-tax income between superannuation contributions, additional mortgage repayments and non-superannuation investment.</li>
+      <li>Whether your current retirement trajectory meets your stated objectives.</li>
+      <li>The suitability of your existing superannuation arrangements.</li>
+    </ul>
+    <p>This advice does not address personal insurance, estate planning, or retirement drawdown strategy. Those matters fall outside the scope you requested and are noted in Section 9.</p>
+
+    <h2>2. Your circumstances</h2>
+    <div class="tw"><table class="src">
+      <thead><tr><th>&nbsp;</th><th>Daniel</th><th>Priya</th></tr></thead>
+      <tbody>
+        <tr><td>Age</td><td>38</td><td>36</td></tr>
+        <tr><td>Occupation</td><td>Marketing manager</td><td>Registered nurse</td></tr>
+        <tr><td>Gross salary</td><td>$105,000</td><td>$88,000</td></tr>
+        <tr><td>Superannuation balance</td><td>$92,000</td><td>$68,000</td></tr>
+        <tr><td>Fund type</td><td>Retail</td><td>Industry</td></tr>
+      </tbody>
+    </table></div>
+    <p><strong>Household position.</strong> One dependent child, aged 4. Owner-occupied property in western Sydney with a mortgage of $720,000 at 5.90% variable and 25 years remaining. Non-superannuation assets of $70,000, comprising $45,000 in an offset account and $25,000 in a listed equity portfolio.</p>
+    <p><strong>Superannuation balance differential.</strong> Priya's balance is $24,000 below Daniel's. This reflects both her lower salary base and an 18-month absence from the workforce. Left unaddressed, this differential compounds to approximately $135,000 by age 67. Section 7.4 addresses this.</p>
+
+    <h2>3. Your objectives</h2>
+    <p>You identified three objectives, in the following order of priority:</p>
+    <ul>
+      <li>Retirement at age 67 with an income sufficient to maintain your current standard of living.</li>
+      <li>Discharge of the mortgage prior to retirement.</li>
+      <li>Productive allocation of the surplus cash flow currently uncommitted.</li>
+    </ul>
+
+    <h2>4. Your constraints</h2>
+    <p><strong>Liquidity.</strong> Priya has indicated a requirement for accessible capital prior to preservation age, being age 60, to accommodate a potential career transition. This has been treated as a binding constraint rather than a preference, and it materially affects the recommendation set out in Section 8.</p>
+    <p><strong>Risk tolerance.</strong> You have described your position as balanced to growth, with differing tolerances between you. The modelling assumes a growth-tilted allocation returning 7% per annum gross, consistent with that profile.</p>
+
+    <h2>5. Existing superannuation arrangements</h2>
+    <p>Daniel's fund charges total fees of approximately 1.35% per annum. A comparable MySuper option charges approximately 0.65%.</p>
+    <p class="pull">Over the 30 years to retirement, this differential is worth $200,907 in present-value terms.</p>
+    <p>To place this in context, sensitivity analysis indicates that a 0.80 percentage point reduction in fees contributes approximately $212,000 to the terminal balance, whereas a 0.50 percentage point improvement in gross investment return contributes approximately $128,000. The fee reduction therefore delivers a greater benefit than a material improvement in investment performance, and unlike investment performance it is within your control.</p>
+
+    <h2>6. Strategy analysis</h2>
+    <p>Four allocation strategies were modelled over a 30-year projection to age 67. Each strategy applies the identical $34,000 of pre-tax income.</p>
+    <p><strong>Basis of comparison.</strong> Concessional superannuation contributions are made from pre-tax income and are taxed at 15% on entry, so $34,000 directed to superannuation results in $28,900 received by the fund. Additional mortgage repayments and non-superannuation investment are funded from after-tax income at a marginal rate of 32%, so the same $34,000 results in $23,120 available. The model converts at the marginal rate to ensure each strategy applies an equivalent pre-tax commitment. A comparison on gross dollars would understate the after-tax cost of the non-superannuation strategies by $10,880 per annum.</p>
+
+    <h3>6.1 Strategy A: Retain current arrangements</h3>
+    <p>Surplus directed to non-superannuation investment. Mortgage amortises on schedule and is discharged in year 24. Terminal superannuation of $1,413,531 and total net wealth of $2,770,854, both in present-value terms. Capital remains fully accessible throughout.</p>
+
+    <h3>6.2 Strategy B: Full concessional contribution</h3>
+    <p>Surplus directed to superannuation by way of salary sacrifice, apportioned between you in proportion to salary to remain within the concessional contributions cap of $32,500 per person.</p>
+    <p>Terminal superannuation of $2,891,693, being approximately double Strategy A. This reflects both the higher net contribution and the concessional tax treatment of earnings within the superannuation environment.</p>
+    <p>Non-superannuation assets fall to $381,473. All contributed capital is preserved until age 60. <strong>This strategy is inconsistent with the liquidity constraint set out in Section 4.</strong></p>
+
+    <h3>6.3 Strategy C: Accelerated mortgage repayment</h3>
+    <p>Surplus directed to additional principal repayments. Mortgage discharged in year 13, when Daniel is 51. Terminal superannuation of $1,413,531 and total net wealth of $2,671,415, the lowest of the four strategies.</p>
+    <p>Accelerated repayment delivers a certain, tax-free return equal to the mortgage rate of 5.90%. Over a 30-year horizon this is outperformed by concessional contributions, which benefit from a 17 percentage point tax differential on entry and concessional treatment of earnings thereafter. The modelling does not capture the non-financial value of unencumbered home ownership at age 51, which is a legitimate consideration in its favour.</p>
+
+    <h3>6.4 Strategy D: Equal allocation</h3>
+    <p>Surplus divided equally between superannuation and additional mortgage repayment. Mortgage discharged in year 17. Terminal superannuation of $2,152,612 and total net wealth of $2,950,551.</p>
+
+    <h3>6.5 Comparative summary</h3>
+    <div class="tw"><table>
+      <caption>All figures in present-value terms.</caption>
+      <thead><tr><th>&nbsp;</th><th>Strategy A</th><th>Strategy B</th><th>Strategy C</th><th>Strategy D</th></tr></thead>
+      <tbody>
+        <tr><td>Terminal superannuation</td><td>$1,413,531</td><td>$2,891,693</td><td>$1,413,531</td><td>$2,152,612</td></tr>
+        <tr><td>Total net wealth</td><td>$2,770,854</td><td>$3,273,166</td><td>$2,671,415</td><td>$2,950,551</td></tr>
+        <tr><td>Years to mortgage discharge</td><td>24</td><td>24</td><td>13</td><td>17</td></tr>
+        <tr><td>Income at 4% drawdown</td><td>$110,834</td><td>$130,927</td><td>$106,857</td><td>$118,022</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>7. Retirement adequacy</h2>
+    <h3>7.1 Against the ASFA benchmark</h3>
+    <p>The ASFA Retirement Standard sets the comfortable benchmark for a homeowner couple at $78,566 per annum, supported by a lump sum of $730,000.</p>
+    <p><strong>All four strategies satisfy this benchmark.</strong> The least favourable strategy exceeds the lump sum benchmark by $683,531 in present-value terms. The benchmark does not discriminate between the strategies and is not an appropriate measure of adequacy for a household at your income level.</p>
+
+    <h3>7.2 Against income replacement</h3>
+    <p>A 70% replacement of current household income implies a retirement income objective of $135,100 per annum.</p>
+    <div class="tw"><table>
+      <thead><tr><th>&nbsp;</th><th>Strategy A</th><th>Strategy B</th><th>Strategy C</th><th>Strategy D</th></tr></thead>
+      <tbody><tr><td>Shortfall against objective</td><td class="n">($24,266)</td><td class="n">($4,173)</td><td class="n">($28,243)</td><td class="n">($17,078)</td></tr></tbody>
+    </table></div>
+    <p><strong>No strategy achieves the objective.</strong> The most favourable outcome remains $4,173 per annum short. Reallocation of the surplus alone is therefore insufficient to meet your stated retirement objective.</p>
+
+    <h3>7.3 Stochastic analysis</h3>
+    <p>The projections above assume a constant 7% annual return. To test sensitivity to market variability, the model was run across 200 simulated return paths.</p>
+    <p>The median terminal superannuation balance is approximately $2.65 million, with a 10th percentile outcome of $1.6 million and a 90th percentile outcome of $4.64 million.</p>
+    <p>Across those paths, <strong>92% satisfy the ASFA comfortable benchmark</strong> and <strong>1% achieve the 70% replacement objective from superannuation alone</strong>. The shortfall identified in Section 7.2 is therefore structural rather than a function of market variability, and will not be resolved by favourable investment conditions.</p>
+
+    <h3>7.4 Contribution differential</h3>
+    <p>Contribution splitting or spouse contributions may be available to redirect a portion of Daniel's concessional contributions to Priya's account. This would reduce the balance differential identified in Section 2 and may deliver tax advantages. This has not been modelled and warrants separate consideration.</p>
+
+    <h2>8. Recommendations</h2>
+    <div class="rec">
+      <h3>Recommendation 1: Transfer Daniel's superannuation to a lower-cost fund</h3>
+      <p>Priority: immediate. Estimated benefit $200,907 in present-value terms. This recommendation requires no change to contribution levels, no increase in investment risk and no reduction in current expenditure.</p>
+    </div>
+    <div class="rec">
+      <h3>Recommendation 2: Allocate the surplus between superannuation and mortgage repayment, weighted toward superannuation</h3>
+      <p>Strategy B produces the strongest financial outcome but is inconsistent with your liquidity constraint. A weighted allocation captures the majority of the concessional tax benefit while retaining accessible capital prior to preservation age.</p>
+      <p>The precise weighting should be determined by the quantum of accessible capital required to satisfy the constraint, which is a matter for discussion rather than calculation. As a reference point, Strategy D delivers $118,022 per annum against $110,834 under Strategy A and discharges the mortgage seven years earlier.</p>
+    </div>
+    <div class="rec">
+      <h3>Recommendation 3: Address the residual shortfall through one or more structural measures</h3>
+      <p><strong>Extended working life.</strong> Each additional year of employment beyond age 65 contributes disproportionately, as it combines an additional contribution year with an additional year of compounding on a substantial balance. Two additional years contributes more than any available reallocation of the surplus.</p>
+      <p><strong>Revised income objective.</strong> A 70% replacement rate is a planning convention rather than a requirement. Your expenditure at age 67 will differ from your current expenditure, as the mortgage will be discharged and the dependent child will be independent.</p>
+      <p><strong>Career progression.</strong> The model assumes salary growth of 3% per annum. Income growth above that rate reduces the shortfall without further action.</p>
+    </div>
+
+    <h2>9. Assumptions and limitations</h2>
+    <p><strong>Assumptions.</strong> Gross investment return of 7% per annum on superannuation and 6.5% on non-superannuation assets. Inflation of 2.5% per annum. Salary growth of 3% per annum. Continuous employment by both parties to age 67. All rates and thresholds current for the 2026-27 financial year.</p>
+    <p><strong>Limitations.</strong> The following have not been modelled and would affect the projections:</p>
+    <ul>
+      <li>Age Pension entitlement. On the projected balances any entitlement would be limited, but inclusion would improve the retirement income position under all strategies and would likely narrow the differences between them.</li>
+      <li>Tax offsets and the Medicare levy low-income reduction.</li>
+      <li>Year-by-year capital gains tax and franking credit treatment of non-superannuation assets, which are approximated by an assumed tax drag.</li>
+      <li>Personal insurance and estate planning.</li>
+      <li>Retirement drawdown strategy and sequencing risk after age 67.</li>
+    </ul>
+    <p>The stochastic analysis assumes normally distributed returns. Observed equity returns exhibit heavier tails, and the 10th percentile outcome should be regarded as somewhat optimistic.</p>
+    <p><strong>Review.</strong> This advice is based on the circumstances set out in Section 2. Should those circumstances change, and in particular should either party take a further period of absence from the workforce, the projections should be revisited.</p>
+  </article>
+</div>
+
+<footer><div class="wrap">
+  <a class="dl" href="model/wealth-management-model.xlsx" download>Download the model (.xlsx)</a>
+  <p class="fine">Eight sheets, 8,332 formulas, built in Excel. Rates and thresholds are current for the 2026&ndash;27 Australian financial year. The Monte Carlo sheet redraws on recalculation, so figures quoted here are from a single recorded run.</p>
+</div></footer>
+
+<script>
+(function(){
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  function show(tab){
+    tabs.forEach(function(t){
+      var sel = t === tab;
+      t.setAttribute('aria-selected', sel);
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !sel;
+    });
+    tab.focus();
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ show(t); });
+    t.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+        e.preventDefault();
+        show(tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
